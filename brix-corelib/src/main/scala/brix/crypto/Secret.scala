@@ -12,6 +12,7 @@ import java.security.SecureRandom
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import org.apache.commons.codec.binary.Base64
+import brix._
 
 /**
   * Provides functionality for signing data with a secret.
@@ -33,15 +34,13 @@ import org.apache.commons.codec.binary.Base64
   * }
   * }}}
   */
-class Secret private(private val _value: Array[Byte]) {
-
-  import brix._
+class Secret private(val valueAsByteArray: Array[Byte]) {
 
   /**
     * Gets the secret value.
     * @return The secret value as a Base64 string.
     */
-  def value = Base64.encodeBase64String(_value)
+  def value = Base64.encodeBase64String(valueAsByteArray)
 
   /**
     * Signs the specified data.
@@ -63,7 +62,7 @@ class Secret private(private val _value: Array[Byte]) {
     */
   def sign(data: Array[Byte]): Try[String] = Try {
     val mac = Mac.getInstance("HmacSHA1")
-    mac.init(new SecretKeySpec(_value, "HmacSHA1"))
+    mac.init(new SecretKeySpec(valueAsByteArray, "HmacSHA1"))
     Base64.encodeBase64String(mac.doFinal(data))
   }
 }
@@ -80,7 +79,25 @@ object Secret {
     * @param length The length of the secret, in bits, default to 256.
     * @return       A new instance of the [[Secret]] class.
     */
-  def apply(length: Int = 256) = new Secret(
+  def apply(length: Int = 256): Secret = new Secret(
     SecureRandom.getInstance("SHA1PRNG").generateSeed(length >> 3)
   )
+
+  /**
+    * Initializes a new instance of the [[Secret]] class with the
+    * specified secret.
+    *
+    * @param secret The secret as a Base64 string.
+    * @return       A new instance of the [[Secret]] class.
+    */
+  def apply(secret: String): Secret = apply(secret.getBytes(DefaultCharset))
+
+  /**
+    * Initializes a new instance of the [[Secret]] class with the
+    * specified secret.
+    *
+    * @param secret The secret as a byte array.
+    * @return       A new instance of the [[Secret]] class.
+    */
+  def apply(secret: Array[Byte]): Secret = new Secret(secret)
 }

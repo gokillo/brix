@@ -17,9 +17,15 @@ class SecretSpec extends mutable.Specification {
       secret.sign(null.asInstanceOf[String]) must beFailedTry
     }
 
-    "always generate a different signature for each instance" in {
+    "always generate a different signature for each instance when the value changes" in {
       val data = "unsigned data"
       Secret().sign(data).get mustNotEqual Secret().sign(data).get
+    }
+
+    "always generate the same signature for each instance when value does not change" in {
+      val data = "unsigned data"
+      val secret = Secret()
+      secret.sign(data).get mustEqual Secret(secret.valueAsByteArray).sign(data).get
     }
 
     "always generate a different signature when the data to sign changes" in {
@@ -28,8 +34,9 @@ class SecretSpec extends mutable.Specification {
     }
 
     "always generate the same signature when the data to sign does not change" in {
+      val data = "unsigned data"
       val secret = Secret()
-      secret.sign("unsigned data").get mustEqual secret.sign("unsigned data").get
+      secret.sign(data).get mustEqual secret.sign(data).get
     }
   }
 }
