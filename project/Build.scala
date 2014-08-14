@@ -23,13 +23,13 @@ object ApplicationBuild extends Build {
   )
 
   val defaultLibraryDependencies = Seq(
-    "com.github.scala-incubator.io" %% "scala-io-core" % "0.4.3",
-    "org.specs2" %% "specs2" % "2.3.12" % "test",
-    "org.slf4j" % "slf4j-nop" % "1.7.5" % "test"
+    "com.github.scala-incubator.io" %% "scala-io-core" % "0.4.3-1",
+    "org.specs2" %% "specs2" % "2.4" % "test",
+    "org.slf4j" % "slf4j-nop" % "1.7.7" % "test"
   )
 
-  val defaultSettings = Defaults.defaultSettings ++ Seq(
-    scalaVersion := "2.10.3",
+  val defaultSettings = Defaults.coreDefaultSettings ++ Seq(
+    scalaVersion := "2.11.1",
     scalacOptions ++= defaultScalacOptions,
     resolvers ++= defaultResolvers,
     libraryDependencies ++= defaultLibraryDependencies,

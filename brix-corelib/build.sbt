@@ -7,5 +7,5 @@ version := ApplicationBuild.appVersion
 ApplicationBuild.defaultSettings
 
 libraryDependencies ++= Seq(
-  "commons-codec" % "commons-codec" % "1.8"
+  "commons-codec" % "commons-codec" % "1.9"
 )
