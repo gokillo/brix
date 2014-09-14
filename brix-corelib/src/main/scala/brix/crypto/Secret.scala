@@ -45,23 +45,24 @@ class Secret private(val valueAsByteArray: Array[Byte]) {
   /**
     * Signs the specified data.
     *
-    * @param data The data to sign.
-    * @return     A `Try` value containing the signed data as a Base64
-    *             string, or `Failure` in case of error.
-    */
-  def sign(data: String): Try[String] = Try {
-    data.getBytes(DefaultCharset)
-  }.flatMap(sign(_))
-
-  /**
-    * Signs the specified data.
-    *
     * @param data       The data to sign.
     * @param algorithm  The name of the secret-key algorithm, default to HmacSHA1.
     * @return           A `Try` value containing the signed data as a Base64
     *                   string, or `Failure` in case of error.
     */
-  def sign(data: Array[Byte], algorithm: String = "HmacSHA1"): Try[String] = Try {
+  def sign(data: String, algorithm: String = "HmacSHA1"): Try[String] = Try {
+    data.getBytes(DefaultCharset)
+  }.flatMap(sign(_, algorithm))
+
+  /**
+    * Signs the specified data.
+    *
+    * @param data       The data to sign.
+    * @param algorithm  The name of the secret-key algorithm.
+    * @return           A `Try` value containing the signed data as a Base64
+    *                   string, or `Failure` in case of error.
+    */
+  def sign(data: Array[Byte], algorithm: String): Try[String] = Try {
     val mac = Mac.getInstance(algorithm)
     mac.init(new SecretKeySpec(valueAsByteArray, algorithm))
     Base64.encodeBase64String(mac.doFinal(data))
