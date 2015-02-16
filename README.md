@@ -23,7 +23,7 @@ libraryDependencies ++= Seq(
 
 Coming soon...
 
-## Licence
+## License
 
 This software is licensed under the Apache 2 license, quoted below.
 
